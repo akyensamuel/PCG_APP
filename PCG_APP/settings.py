@@ -141,10 +141,17 @@ STATICFILES_DIRS = [
     # Where app and global static (including Tailwind output) live during development
     BASE_DIR / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# In production, serve static files directly with WhiteNoise finders
+if not DEBUG:
+    STATIC_ROOT = None  # Don't use STATIC_ROOT with finders
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
+else:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise configuration for production static file serving
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media uploads (user-uploaded files like avatars)
 MEDIA_URL = config('MEDIA_URL', default='/media/')
