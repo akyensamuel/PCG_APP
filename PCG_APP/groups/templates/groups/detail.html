@@ -7,11 +7,13 @@
       <a href="{% url 'groups:change_group_leader' group.id %}" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm">Change leader</a>
       <a href="{% url 'groups:delete_group' group.id %}" class="px-3 py-1.5 rounded bg-red-600 text-white text-sm">Delete group</a>
       <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
+  <a href="{% url 'groups:activities_list' group.id %}" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Activities</a>
     </div>
   {% endif %}
   {% if is_leader and not is_admin %}
     <div class="mb-4">
       <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
+  <a href="{% url 'groups:activities_list' group.id %}" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Activities</a>
     </div>
   {% endif %}
   {% if group.description %}

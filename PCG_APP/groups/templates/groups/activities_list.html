@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">{{ group.name }} • Activities</h1>
+    {% if is_admin or is_leader %}
+      <a href="{% url 'groups:activity_create' group.id %}" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Record activity</a>
+    {% endif %}
+  </div>
+  {% if activities %}
+    <ul class="space-y-3">
+      {% for a in activities %}
+        <li class="p-3 border rounded">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="font-medium">{{ a.title }} <span class="text-xs text-gray-500">({{ a.get_kind_display }})</span></div>
+              <div class="text-sm text-gray-600 dark:text-gray-300">{{ a.date }}{% if a.start_time %} • {{ a.start_time }}{% endif %}{% if a.end_time %} - {{ a.end_time }}{% endif %}</div>
+              {% if a.location %}<div class="text-sm text-gray-600 dark:text-gray-300">📍 {{ a.location }}</div>{% endif %}
+              {% if a.attendance_count %}<div class="text-sm text-gray-600 dark:text-gray-300">👥 Attendance: {{ a.attendance_count }}</div>{% endif %}
+              {% if a.notes %}<div class="text-sm mt-1">{{ a.notes }}</div>{% endif %}
+            </div>
+            {% if is_admin or is_leader %}
+              <div class="text-right space-x-2 shrink-0">
+                <a href="{% url 'groups:activity_edit' a.id %}" class="text-xs text-blue-700 hover:underline">Edit</a>
+                <a href="{% url 'groups:activity_delete' a.id %}" class="text-xs text-red-700 hover:underline">Delete</a>
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-600 dark:text-gray-300">No activities recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

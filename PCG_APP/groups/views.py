@@ -7,10 +7,11 @@ from django.utils import timezone
 from django.http import JsonResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.http import HttpResponse
 
 from accounts.models import Profile
-from .forms import ChurchGroupForm, PromoteToAdminForm, ChangeLeaderForm, GroupApplicationForm
-from .models import Group, GroupMembership, GroupApplication
+from .forms import ChurchGroupForm, PromoteToAdminForm, ChangeLeaderForm, GroupApplicationForm, GroupActivityForm
+from .models import Group, GroupMembership, GroupApplication, GroupActivity
 from .utils import sync_user_role_groups
 from notifications.models import Notification
 
@@ -257,6 +258,187 @@ def member_detail(request, group_pk: int, user_pk: int):
 			"is_leader": is_leader,
 		},
 	)
+
+
+@login_required
+def activities_list(request, group_pk: int):
+	group = get_object_or_404(Group, pk=group_pk)
+	# Members of group and admins can view; leaders can manage
+	admin = is_admin_user(request.user)
+	is_member = GroupMembership.objects.filter(group=group, user=request.user).exists()
+	if not (admin or is_member):
+		raise Http404()
+	activities = GroupActivity.objects.filter(group=group).order_by("-date", "-start_time")
+	is_leader = GroupMembership.objects.filter(group=group, user=request.user, is_leader=True).exists()
+	return render(request, "groups/activities_list.html", {"group": group, "activities": activities, "is_admin": admin, "is_leader": is_leader})
+
+
+@login_required
+@transaction.atomic
+def activity_create(request, group_pk: int):
+	group = get_object_or_404(Group, pk=group_pk)
+	admin = is_admin_user(request.user)
+	is_leader = GroupMembership.objects.filter(group=group, user=request.user, is_leader=True).exists()
+	if not (admin or is_leader):
+		raise Http404()
+	if request.method == "POST":
+		form = GroupActivityForm(request.POST)
+		if form.is_valid():
+			act: GroupActivity = form.save(commit=False)
+			act.group = group
+			act.created_by = request.user
+			act.save()
+			# Optional: notify members
+			if form.cleaned_data.get("notify_members"):
+				kind_label_map = {
+					GroupActivity.Kind.MEETING.value: "meeting",
+					GroupActivity.Kind.EVENT.value: "event",
+					GroupActivity.Kind.OUTREACH.value: "outreach",
+					GroupActivity.Kind.SERVICE.value: "service",
+					GroupActivity.Kind.OTHER.value: "activity",
+				}
+				kind_label = kind_label_map.get(act.kind, "activity")
+				member_ids = list(GroupMembership.objects.filter(group=group).values_list("user_id", flat=True))
+				for uid in member_ids:
+					Notification.objects.create(
+						actor=request.user,
+						recipient_id=uid,
+						text=f"New {kind_label} in {group.name}: {act.title} on {act.date}",
+						url=reverse('groups:activities_list', kwargs={'group_pk': group.pk}),
+					)
+			messages.success(request, "Activity recorded.")
+			return redirect("groups:activities_list", group_pk=group.pk)
+	else:
+		form = GroupActivityForm()
+	return render(request, "groups/activity_form.html", {"form": form, "group": group, "mode": "create"})
+
+
+@login_required
+@transaction.atomic
+def activity_edit(request, activity_pk: int):
+	act = get_object_or_404(GroupActivity, pk=activity_pk)
+	group = act.group
+	admin = is_admin_user(request.user)
+	is_leader = GroupMembership.objects.filter(group=group, user=request.user, is_leader=True).exists()
+	if not (admin or is_leader):
+		raise Http404()
+	if request.method == "POST":
+		form = GroupActivityForm(request.POST, instance=act)
+		if form.is_valid():
+			form.save()
+			if form.cleaned_data.get("notify_members"):
+				kind_label_map = {
+					GroupActivity.Kind.MEETING.value: "meeting",
+					GroupActivity.Kind.EVENT.value: "event",
+					GroupActivity.Kind.OUTREACH.value: "outreach",
+					GroupActivity.Kind.SERVICE.value: "service",
+					GroupActivity.Kind.OTHER.value: "activity",
+				}
+				kind_label = kind_label_map.get(act.kind, "activity")
+				member_ids = list(GroupMembership.objects.filter(group=group).values_list("user_id", flat=True))
+				for uid in member_ids:
+					Notification.objects.create(
+						actor=request.user,
+						recipient_id=uid,
+						text=f"Updated {kind_label} in {group.name}: {act.title} on {act.date}",
+						url=reverse('groups:activities_list', kwargs={'group_pk': group.pk}),
+					)
+			messages.success(request, "Activity updated.")
+			return redirect("groups:activities_list", group_pk=group.pk)
+	else:
+		form = GroupActivityForm(instance=act)
+	return render(request, "groups/activity_form.html", {"form": form, "group": group, "mode": "edit", "activity": act})
+
+
+@login_required
+@transaction.atomic
+def activity_delete(request, activity_pk: int):
+	act = get_object_or_404(GroupActivity, pk=activity_pk)
+	group = act.group
+	admin = is_admin_user(request.user)
+	is_leader = GroupMembership.objects.filter(group=group, user=request.user, is_leader=True).exists()
+	if not (admin or is_leader):
+		raise Http404()
+	if request.method == "POST":
+		act.delete()
+		messages.success(request, "Activity deleted.")
+		return redirect("groups:activities_list", group_pk=group.pk)
+	return render(request, "groups/confirm_activity_delete.html", {"group": group, "activity": act})
+
+
+@login_required
+@user_passes_test(is_admin_user)
+def activities_report(request, group_pk: int):
+	"""Admin-only activity report for a group, with optional CSV export.
+
+	Query params:
+	- start: YYYY-MM-DD (inclusive)
+	- end: YYYY-MM-DD (inclusive)
+	- kind: optional activity kind value
+	- format: 'csv' to download CSV; default is HTML view
+	"""
+	group = get_object_or_404(Group, pk=group_pk)
+
+	qs = GroupActivity.objects.filter(group=group)
+	# Filters
+	start = request.GET.get("start")
+	end = request.GET.get("end")
+	kind = request.GET.get("kind")
+	if start:
+		try:
+			start_date = timezone.datetime.fromisoformat(start).date()
+			qs = qs.filter(date__gte=start_date)
+		except Exception:
+			pass
+	if end:
+		try:
+			end_date = timezone.datetime.fromisoformat(end).date()
+			qs = qs.filter(date__lte=end_date)
+		except Exception:
+			pass
+	if kind:
+		qs = qs.filter(kind=kind)
+
+	qs = qs.order_by("date", "start_time")
+
+	# Aggregates
+	total_count = qs.count()
+	total_attendance = sum((a.attendance_count or 0) for a in qs)
+
+	# Format toggle
+	if request.GET.get("format") == "csv":
+		# CSV export
+		import csv
+		response = HttpResponse(content_type="text/csv")
+		filename = f"activities_{group.pk}.csv"
+		response["Content-Disposition"] = f"attachment; filename={filename}"
+		writer = csv.writer(response)
+		writer.writerow(["Date", "Kind", "Title", "Location", "Start", "End", "Attendance"]) 
+		for a in qs:
+			writer.writerow([
+				a.date.isoformat(),
+				a.kind,
+				a.title,
+				a.location or "",
+				a.start_time.isoformat() if a.start_time else "",
+				a.end_time.isoformat() if a.end_time else "",
+				a.attendance_count or 0,
+			])
+		# Summary row
+		writer.writerow([])
+		writer.writerow(["Totals", "", "", "", "", "", total_attendance])
+		return response
+
+	kinds = [(k, v) for k, v in GroupActivity.Kind.choices]
+	context = {
+		"group": group,
+		"activities": qs,
+		"total_count": total_count,
+		"total_attendance": total_attendance,
+		"kinds": kinds,
+		"filters": {"start": start or "", "end": end or "", "kind": kind or ""},
+	}
+	return render(request, "groups/activities_report.html", context)
 
 
 @login_required

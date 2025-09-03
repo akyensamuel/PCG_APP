@@ -25,6 +25,7 @@
         <div class="text-right space-x-2">
           {% if is_admin %}
             <a href="{% url 'groups:change_group_leader' g.id %}" class="text-blue-600 hover:underline text-xs">Change leader</a>
+            <a href="{% url 'groups:activities_report' g.id %}" class="text-purple-700 hover:underline text-xs">Report</a>
             <a href="{% url 'groups:delete_group' g.id %}" class="text-red-600 hover:underline text-xs">Delete</a>
           {% endif %}
           {% if request.user.is_authenticated %}

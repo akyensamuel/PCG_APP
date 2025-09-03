@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl">
+  <div class="mb-4">
+    <a href="{% url 'groups:activities_list' group.id %}" class="text-sm text-blue-600 hover:underline">← Back to Activities</a>
+  </div>
+  <h1 class="text-2xl font-bold mb-3">{% if mode == 'edit' %}Edit{% else %}Record{% endif %} Activity</h1>
+  <form method="post" class="space-y-3">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Save</button>
+  </form>
+</div>
+{% endblock %}

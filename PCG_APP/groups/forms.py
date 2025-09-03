@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Group, GroupMembership, GroupApplication
+from .models import Group, GroupMembership, GroupApplication, GroupActivity
 
 
 class ChurchGroupForm(forms.ModelForm):
@@ -39,4 +39,26 @@ class GroupApplicationForm(forms.ModelForm):
         fields = ["message"]
         widgets = {
             "message": forms.Textarea(attrs={"rows": 3, "placeholder": "Optional message"}),
+        }
+
+
+class GroupActivityForm(forms.ModelForm):
+    notify_members = forms.BooleanField(required=False, label="Notify all group members after saving")
+    class Meta:
+        model = GroupActivity
+        fields = [
+            "title",
+            "kind",
+            "date",
+            "start_time",
+            "end_time",
+            "location",
+            "attendance_count",
+            "notes",
+        ]
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date"}),
+            "start_time": forms.TimeInput(attrs={"type": "time"}),
+            "end_time": forms.TimeInput(attrs={"type": "time"}),
+            "notes": forms.Textarea(attrs={"rows": 4}),
         }

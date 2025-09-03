@@ -46,3 +46,31 @@ class GroupApplication(models.Model):
 
 	def __str__(self) -> str:
 		return f"Application {self.user.username} -> {self.group.name} ({self.status})"
+
+
+class GroupActivity(models.Model):
+	class Kind(models.TextChoices):
+		MEETING = "MEETING", "Meeting"
+		EVENT = "EVENT", "Event"
+		OUTREACH = "OUTREACH", "Outreach"
+		SERVICE = "SERVICE", "Service"
+		OTHER = "OTHER", "Other"
+
+	group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="activities")
+	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="created_group_activities")
+	title = models.CharField(max_length=200)
+	kind = models.CharField(max_length=16, choices=Kind.choices, default=Kind.MEETING)
+	date = models.DateField()
+	start_time = models.TimeField(null=True, blank=True)
+	end_time = models.TimeField(null=True, blank=True)
+	location = models.CharField(max_length=200, blank=True)
+	attendance_count = models.PositiveIntegerField(null=True, blank=True)
+	notes = models.TextField(blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ["-date", "-start_time", "-created_at"]
+
+	def __str__(self) -> str:
+		return f"{self.group.name}: {self.title} ({self.kind}) on {self.date}"

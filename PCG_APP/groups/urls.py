@@ -20,4 +20,10 @@ urlpatterns = [
     path("<int:group_pk>/applications/", views.group_applications, name="group_applications"),
     path("applications/<int:app_pk>/approve/", views.approve_application, name="approve_application"),
     path("applications/<int:app_pk>/reject/", views.reject_application, name="reject_application"),
+    # Activities (leaders/admins create/manage; members can view list)
+    path("<int:group_pk>/activities/", views.activities_list, name="activities_list"),
+    path("<int:group_pk>/activities/report/", views.activities_report, name="activities_report"),
+    path("<int:group_pk>/activities/new/", views.activity_create, name="activity_create"),
+    path("activities/<int:activity_pk>/edit/", views.activity_edit, name="activity_edit"),
+    path("activities/<int:activity_pk>/delete/", views.activity_delete, name="activity_delete"),
 ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Group, GroupMembership
-from .models import GroupApplication
+from .models import GroupApplication, GroupActivity
 
 
 @admin.register(Group)
@@ -18,3 +18,10 @@ class GroupMembershipAdmin(admin.ModelAdmin):
 class GroupApplicationAdmin(admin.ModelAdmin):
 	list_display = ("user", "group", "status", "created_at", "decided_at")
 	list_filter = ("status", "group")
+
+
+@admin.register(GroupActivity)
+class GroupActivityAdmin(admin.ModelAdmin):
+	list_display = ("group", "title", "kind", "date", "start_time", "attendance_count")
+	list_filter = ("kind", "group")
+	search_fields = ("title", "notes", "group__name")
