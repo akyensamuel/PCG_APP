@@ -5,7 +5,7 @@
   "scripts": {
     "tailwind:build": "npx tailwindcss -c tailwind.config.js -i ./static/css/tailwind.css -o ./static/css/styles.css --minify",
     "tailwind:watch": "npx tailwindcss -c tailwind.config.js -i ./static/css/tailwind.css -o ./static/css/styles.css --watch",
-    "vercel-build": "npm run tailwind:build"
+    "vercel-build": "npm run tailwind:build && python manage.py collectstatic --noinput"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.10",
