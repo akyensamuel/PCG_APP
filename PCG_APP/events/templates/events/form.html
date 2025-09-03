@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% if mode == 'edit' %}Edit Event{% else %}New Event{% endif %}</h1>
+<form method="post" enctype="multipart/form-data" class="space-y-4 max-w-3xl">{% csrf_token %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs mb-1">Title</label>
+      {{ form.title|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    </div>
+    <div>
+      <label class="block text-xs mb-1">Group (optional)</label>
+      {{ form.group|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+      <p class="text-xs text-gray-500">Leaders can only choose groups they lead.</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    {{ form.is_global }} <label class="text-sm">Visible to all members (Admins only)</label>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div>
+      <label class="block text-xs mb-1">Start date</label>
+      {{ form.start_date|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    </div>
+    <div>
+      <label class="block text-xs mb-1">End date</label>
+      {{ form.end_date|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    </div>
+    <div>
+      <label class="block text-xs mb-1">Start time</label>
+      {{ form.start_time|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    </div>
+    <div>
+      <label class="block text-xs mb-1">End time</label>
+      {{ form.end_time|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    </div>
+  </div>
+  <div>
+    <label class="block text-xs mb-1">Location</label>
+    {{ form.location|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+  </div>
+  <div>
+    <label class="block text-xs mb-1">Featured image</label>
+    {{ form.featured_image }}
+  </div>
+  <div>
+    <label class="block text-xs mb-1">Body</label>
+    {{ form.body|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
+    <p class="text-xs text-gray-500">Tip: You can paste formatted text; a richer editor can be enabled later.</p>
+  </div>
+  <div>
+    <label class="block text-xs mb-1">Gallery images</label>
+    {{ upload_form.images }}
+  </div>
+  {% if mode == 'edit' and event and event.images.all %}
+    <div>
+      <h3 class="text-sm font-semibold mb-2">Existing images</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {% for img in event.images.all %}
+          <div class="border rounded p-2">
+            <img src="{{ img.image.url }}" alt="{{ img.caption }}" class="w-full rounded" />
+            <div class="flex items-center justify-between mt-2 text-xs">
+              <span class="truncate">{{ img.caption|default:'(no caption)' }}</span>
+              <a href="{% url 'events:delete_image' img.id %}" class="text-red-600 underline">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="flex items-center gap-2">
+    <button class="px-4 py-2 rounded bg-pcg-blue text-white">Save</button>
+    {% if mode == 'edit' and event %}
+      <a class="underline text-sm" href="{% url 'events:detail' event.slug %}">Cancel</a>
+    {% else %}
+      <a class="underline text-sm" href="{% url 'events:calendar' %}">Cancel</a>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}

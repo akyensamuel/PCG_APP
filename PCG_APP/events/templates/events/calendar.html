@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block head_extra %}
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet" />
+  <style>
+    #calendar { min-height: 650px; }
+    .fc .fc-toolbar-title { font-weight: 700; }
+
+  /* Dark mode fixes for FullCalendar */
+  .dark .fc { color: #e5e7eb; }
+  .dark .fc .fc-toolbar-title { color: #e5e7eb; }
+  .dark .fc-theme-standard td,
+  .dark .fc-theme-standard th { border-color: #334155; }
+  .dark .fc .fc-col-header-cell { background-color: transparent; }
+  .dark .fc .fc-col-header-cell-cushion { color: #cbd5e1 !important; }
+  .dark .fc .fc-col-header, .dark .fc .fc-scrollgrid-section-header { border-color: #334155; }
+  .dark .fc .fc-daygrid-day { background-color: transparent; }
+  .dark .fc .fc-daygrid-day-number { color: #e5e7eb; }
+  .dark .fc .fc-day-today { background-color: rgba(29, 78, 216, 0.15) !important; }
+  .dark .fc .fc-daygrid-event { border-color: transparent; }
+  .dark .fc .fc-scrollgrid { border-color: #334155; }
+  .dark .fc .fc-popover { background-color: #0f172a; color: #e5e7eb; border-color: #334155; }
+  .dark .fc .fc-popover .fc-popover-header { background-color: #111827; border-color: #334155; color: #e5e7eb; }
+  .dark .fc .fc-button { background-color: #111827; border: 1px solid #475569; color: #cbd5e1; }
+  .dark .fc .fc-button:hover { background-color: #1f2937; color: #ffffff; }
+  .dark .fc .fc-button:disabled { opacity: 0.6; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="relative bg-stone-50 dark:bg-transparent">
+    <div class="bg-sky-400 w-full sm:w-40 h-40 rounded-full absolute top-1 opacity-20 max-sm:right-0 sm:left-56 z-0"></div>
+    <div class="bg-emerald-500 w-full sm:w-40 h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
+    <div class="bg-purple-600 w-full sm:w-40 h-24 absolute top-40 -left-0 opacity-20 z-0"></div>
+    <div class="w-full py-8 sm:py-12 lg:py-16 relative z-10 backdrop-blur-3xl">
+      <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
+        <div class="grid grid-cols-12 gap-8 max-w-4xl mx-auto xl:max-w-full">
+          <div class="col-span-12 xl:col-span-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="font-manrope text-3xl leading-tight text-gray-900 dark:text-white mb-1.5">Upcoming Events</h2>
+                <p class="text-lg font-normal text-gray-600 dark:text-gray-300 mb-4">Don’t miss schedule</p>
+              </div>
+              <a href="{% url 'events:create' %}" class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-800">Create</a>
+            </div>
+            <div class="flex gap-5 flex-col">
+              {% if upcoming_events %}
+                {% for ev in upcoming_events %}
+                  <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full {% if ev.is_global %}bg-sky-400{% else %}bg-emerald-600{% endif %}"></span>
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-200">
+                          {{ ev.start_date|date:'M j, Y' }}
+                          {% if ev.start_time %}- {{ ev.start_time|time:'H:i' }}{% endif %}
+                          {% if ev.end_time %} - {{ ev.end_time|time:'H:i' }}{% endif %}
+                        </p>
+                      </div>
+                      <a href="{% url 'events:detail' ev.slug %}" class="text-xs text-indigo-600 hover:text-indigo-800">View</a>
+                    </div>
+                    <h6 class="text-lg leading-7 font-semibold text-black dark:text-white mb-1">{{ ev.title }}</h6>
+                    <p class="text-sm font-normal text-gray-600 dark:text-gray-300">
+                      {% if ev.group %}{{ ev.group.name }}{% elif ev.is_global %}Global{% endif %}
+                      {% if ev.location %} · {{ ev.location }}{% endif %}
+                    </p>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="text-gray-600 dark:text-gray-300">No upcoming events.</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white dark:from-slate-900/25 dark:to-slate-900 dark:xl:bg-slate-900 rounded-2xl max-xl:row-start-1">
+            <div id="calendar" class="rounded-lg border border-indigo-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const el = document.getElementById('calendar');
+      if (!el || !window.FullCalendar) {
+        console.error('Calendar container or FullCalendar not available');
+        return;
+      }
+      const calendar = new FullCalendar.Calendar(el, {
+        height: 'auto',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        firstDay: 0,
+        eventColor: '#1e40af',
+        events: {
+          url: '{% url "events:api_events" %}',
+          failure: function() {
+            console.error('Failed to load events');
+          }
+        },
+        eventClick: function(info) {
+          if (info.event.url) {
+            window.location.href = info.event.url;
+            info.jsEvent.preventDefault();
+          }
+        }
+      });
+      calendar.render();
+    });
+  </script>
+{% endblock %}
