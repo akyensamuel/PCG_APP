@@ -53,3 +53,4 @@ logs/
 # Production secrets
 secrets.json
 config.json
+.vercel

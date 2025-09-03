@@ -30,38 +30,5 @@
       "src": "/(.*)",
       "dest": "PCG_APP/wsgi.py"
     }
-  ],
-  "env": {
-    "SECRET_KEY": "@secret_key",
-    "DEBUG": "False",
-    "ALLOWED_HOSTS": ".vercel.app",
-    "DB_ENGINE": "@db_engine",
-    "DB_NAME": "@db_name",
-    "DB_USER": "@db_user",
-    "DB_PASSWORD": "@db_password",
-    "DB_HOST": "@db_host",
-    "DB_PORT": "@db_port",
-    "EMAIL_BACKEND": "@email_backend",
-    "EMAIL_HOST": "@email_host",
-    "EMAIL_PORT": "@email_port",
-    "EMAIL_USE_TLS": "@email_use_tls",
-    "EMAIL_HOST_USER": "@email_host_user",
-    "EMAIL_HOST_PASSWORD": "@email_host_password",
-    "SECURE_BROWSER_XSS_FILTER": "True",
-    "SECURE_CONTENT_TYPE_NOSNIFF": "True",
-    "X_FRAME_OPTIONS": "DENY",
-    "SECURE_SSL_REDIRECT": "True",
-    "SESSION_COOKIE_SECURE": "True",
-    "CSRF_COOKIE_SECURE": "True",
-    "TIME_ZONE": "UTC",
-    "STATIC_URL": "/static/",
-    "MEDIA_URL": "/media/"
-  },
-  "installCommand": "pip install -r requirements.txt && npm install",
-  "buildCommand": "npm run tailwind:build && python manage.py collectstatic --noinput",
-  "functions": {
-    "PCG_APP/wsgi.py": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }

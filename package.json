@@ -3,8 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "tailwind:build": "tailwindcss -c tailwind.config.js -i ./PCG_APP/static/css/tailwind.css -o ./PCG_APP/static/css/styles.css --minify",
-    "tailwind:watch": "tailwindcss -c tailwind.config.js -i ./PCG_APP/static/css/tailwind.css -o ./PCG_APP/static/css/styles.css --watch"
+    "tailwind:build": "npx tailwindcss -c tailwind.config.js -i ./static/css/tailwind.css -o ./static/css/styles.css --minify",
+    "tailwind:watch": "npx tailwindcss -c tailwind.config.js -i ./static/css/tailwind.css -o ./static/css/styles.css --watch",
+    "vercel-build": "npm run tailwind:build"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.10",
