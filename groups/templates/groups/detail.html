@@ -1,52 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-3xl">
-  <h1 class="text-2xl font-bold mb-2">{{ group.name }}</h1>
-  {% if is_admin %}
-    <div class="mb-4 flex gap-3">
-      <a href="{% url 'groups:change_group_leader' group.id %}" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm">Change leader</a>
-      <a href="{% url 'groups:delete_group' group.id %}" class="px-3 py-1.5 rounded bg-red-600 text-white text-sm">Delete group</a>
-      <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
-  <a href="{% url 'groups:activities_list' group.id %}" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Activities</a>
-    </div>
-  {% endif %}
-  {% if is_leader and not is_admin %}
-    <div class="mb-4">
-      <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
-  <a href="{% url 'groups:activities_list' group.id %}" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Activities</a>
-    </div>
-  {% endif %}
+<div class="max-w-4xl">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold mb-4">{{ group.name }}</h1>
+    {% if is_admin %}
+      <div class="flex gap-3 flex-wrap">
+        <a href="{% url 'groups:change_group_leader' group.id %}" class="px-4 py-2 bg-blue-600 text-white rounded text-sm">Change leader</a>
+        <a href="{% url 'groups:delete_group' group.id %}" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Delete group</a>
+        <a href="{% url 'groups:group_applications' group.id %}" class="px-4 py-2 bg-indigo-600 text-white rounded text-sm">Applications</a>
+        <a href="{% url 'groups:activities_list' group.id %}" class="px-4 py-2 bg-emerald-600 text-white rounded text-sm">Activities</a>
+      </div>
+    {% endif %}
+    {% if is_leader and not is_admin %}
+      <div class="flex gap-3 flex-wrap">
+        <a href="{% url 'groups:group_applications' group.id %}" class="px-4 py-2 bg-indigo-600 text-white rounded text-sm">Applications</a>
+        <a href="{% url 'groups:activities_list' group.id %}" class="px-4 py-2 bg-emerald-600 text-white rounded text-sm">Activities</a>
+      </div>
+    {% endif %}
+  </div>
+
   {% if group.description %}
-    <p class="text-gray-600 dark:text-gray-300 mb-4">{{ group.description }}</p>
+    <div class="mb-6">
+      <p class="text-gray-600 dark:text-gray-300">{{ group.description }}</p>
+    </div>
   {% endif %}
 
   {% if is_admin %}
     <div class="mb-6">
-      <h2 class="text-lg font-semibold mb-2">Leaders</h2>
-      <ul class="list-disc ml-5 space-y-1">
+      <h2 class="text-lg font-semibold mb-4">Leaders</h2>
+      <ul class="space-y-2">
         {% for m in leaders %}
-          <li>{{ m.user.get_full_name|default:m.user.username }}</li>
+          <li class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+            {{ m.user.get_full_name|default:m.user.username }}
+          </li>
         {% empty %}
-          <li>No leader assigned.</li>
+          <li class="text-gray-500 italic">No leader assigned.</li>
         {% endfor %}
       </ul>
     </div>
   {% endif %}
 
   <div>
-    <h2 class="text-lg font-semibold mb-2">Members</h2>
-    <ul class="list-disc ml-5 space-y-1">
+    <h2 class="text-lg font-semibold mb-4">Members</h2>
+    <ul class="space-y-2">
       {% for m in members %}
-        <li>
+        <li class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
           {% if is_admin or is_leader %}
-            <a class="hover:underline" href="{% url 'groups:member_detail' group.id m.user.id %}">{{ m.user.get_full_name|default:m.user.username }}</a>
+            <a class="hover:underline text-blue-600" href="{% url 'groups:member_detail' group.id m.user.id %}">{{ m.user.get_full_name|default:m.user.username }}</a>
           {% else %}
             {{ m.user.get_full_name|default:m.user.username }}
           {% endif %}
-          {% if is_admin and m.is_leader %}<span class="ml-2 text-xs px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">Leader</span>{% endif %}
+          {% if is_admin and m.is_leader %}
+            <span class="ml-2 text-xs px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">Leader</span>
+          {% endif %}
         </li>
       {% empty %}
-        <li>No members in this group yet.</li>
+        <li class="text-gray-500 italic">No members in this group yet.</li>
       {% endfor %}
     </ul>
   </div>

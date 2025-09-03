@@ -1,28 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-3xl">
+<div class="max-w-xl">
   <div class="mb-4">
     <a href="{% url 'groups:detail' group.id %}" class="text-sm text-blue-600 hover:underline">← Back to {{ group.name }}</a>
   </div>
-  <h1 class="text-2xl font-bold mb-3">Applications</h1>
+  <h1 class="text-2xl font-bold mb-4">Applications</h1>
   {% if applications %}
-    <ul class="space-y-3">
+    <div class="space-y-4">
       {% for app in applications %}
-        <li class="p-3 border rounded flex items-center justify-between">
-          <div>
+        <div class="p-4 border rounded bg-gray-50 dark:bg-slate-800">
+          <div class="mb-3">
             <div class="font-medium">{{ app.user.get_full_name|default:app.user.username }}</div>
             {% if app.message %}
-              <div class="text-sm text-gray-600 dark:text-gray-300">{{ app.message }}</div>
+              <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ app.message }}</div>
             {% endif %}
-            <div class="text-xs text-gray-500">{{ app.created_at }}</div>
+            <div class="text-xs text-gray-500 mt-2">{{ app.created_at }}</div>
           </div>
-          <div class="space-x-2">
-            <a href="{% url 'groups:approve_application' app.id %}" class="text-xs text-green-700 hover:underline">Approve</a>
-            <a href="{% url 'groups:reject_application' app.id %}" class="text-xs text-red-700 hover:underline">Reject</a>
+          <div class="flex gap-3">
+            <a href="{% url 'groups:approve_application' app.id %}" class="px-4 py-2 bg-green-600 text-white rounded text-sm">Approve</a>
+            <a href="{% url 'groups:reject_application' app.id %}" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Reject</a>
           </div>
-        </li>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p class="text-gray-600 dark:text-gray-300">No pending applications.</p>
   {% endif %}

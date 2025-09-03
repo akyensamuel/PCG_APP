@@ -246,6 +246,18 @@ def member_detail(request, group_pk: int, user_pk: int):
 		"is_current_leader": membership.is_leader,
 	}
 
+	# Add additional profile information for admins only
+	if admin:
+		profile = getattr(target_user, 'profile', None)
+		if profile:
+			info.update({
+				"phone": profile.phone,
+				"age": profile.age,
+				"date_of_birth": profile.date_of_birth,
+				"avatar": profile.avatar,
+				"role": profile.get_role_display(),
+			})
+
 	return render(
 		request,
 		"groups/member_detail.html",

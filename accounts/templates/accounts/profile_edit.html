@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Edit Profile • PCG - A.N.T{% endblock %}
+{% block content %}
+<div class="max-w-xl">
+  <h1 class="text-2xl font-bold mb-4">Edit Profile</h1>
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">First name</label>
+          {{ form.first_name|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.first_name.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Last name</label>
+          {{ form.last_name|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.last_name.errors }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Email</label>
+        {{ form.email|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.email.errors }}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Phone</label>
+          {{ form.phone|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.phone.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Age</label>
+          {{ form.age|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.age.errors }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Date of Birth</label>
+        {{ form.date_of_birth|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.date_of_birth.errors }}
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Profile Picture</label>
+        {% if form.instance.avatar %}
+          <div class="mb-2">
+            <img src="{{ form.instance.avatar.url }}" alt="Current avatar" class="w-20 h-20 rounded-full object-cover">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current profile picture</p>
+          </div>
+        {% endif %}
+        {{ form.avatar|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-200 dark:hover:file:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.avatar.errors }}
+      </div>
+    </div>
+
+    <div class="flex gap-4 mt-6">
+      <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        Update Profile
+      </button>
+      <a href="{% url 'home' %}" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

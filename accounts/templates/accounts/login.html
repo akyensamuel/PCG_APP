@@ -2,18 +2,24 @@
 {% load widget_tweaks %}
 {% block title %}Sign in • PCG - A.N.T{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Sign in</h1>
-<form method="post" class="space-y-4 max-w-sm">{% csrf_token %}
-  {{ form.non_field_errors }}
-  <div>
-    <label class="block text-sm mb-1">Username</label>
-    {{ form.username|add_class:'w-full rounded border px-3 py-2' }}
-  </div>
-  <div>
-    <label class="block text-sm mb-1">Password</label>
-    {{ form.password|add_class:'w-full rounded border px-3 py-2' }}
-  </div>
-  <button class="btn-primary" type="submit">Sign in</button>
-  <p class="text-sm mt-2">No account? <a href="{% url 'signup' %}" class="underline">Sign up</a></p>
-</form>
+<div class="max-w-xl">
+  <h1 class="text-2xl font-bold mb-4">Sign in</h1>
+  <form method="post">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Username</label>
+        {{ form.username|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.username.errors }}
+      </div>
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Password</label>
+        {{ form.password|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.password.errors }}
+      </div>
+    </div>
+    <button class="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors" type="submit">Sign in</button>
+    <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">No account? <a href="{% url 'signup' %}" class="text-blue-600 dark:text-blue-400 hover:underline">Sign up</a></p>
+  </form>
+</div>
 {% endblock %}

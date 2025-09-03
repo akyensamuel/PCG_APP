@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from .forms import SignupForm
+from django.contrib.auth.decorators import login_required
+from .forms import SignupForm, ProfileEditForm
+from .models import Profile
 
 
 def signup_view(request):
@@ -44,5 +46,27 @@ def logout_view(request):
 	logout(request)
 	messages.info(request, 'Signed out successfully.')
 	return redirect('home')
+
+
+@login_required
+def profile_edit_view(request):
+	"""View for editing user profile information"""
+	try:
+		profile = request.user.profile
+	except Profile.DoesNotExist:
+		profile = Profile.objects.create(user=request.user)
+	
+	if request.method == 'POST':
+		form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=request.user)
+		if form.is_valid():
+			form.save()
+			messages.success(request, 'Your profile has been updated successfully!')
+			return redirect('profile_edit')
+		else:
+			messages.error(request, 'Please correct the errors below.')
+	else:
+		form = ProfileEditForm(instance=profile, user=request.user)
+	
+	return render(request, 'accounts/profile_edit.html', {'form': form})
 
 # Create your views here.

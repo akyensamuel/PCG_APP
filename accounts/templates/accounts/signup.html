@@ -2,102 +2,83 @@
 {% load widget_tweaks %}
 {% block title %}Sign up • PCG - A.N.T{% endblock %}
 {% block content %}
-<div class="max-w-3xl">
+<div class="max-w-xl">
   <h1 class="text-2xl font-bold mb-4">Create an account</h1>
-  <form method="post" enctype="multipart/form-data" class="" novalidate>{% csrf_token %}
-    {% if form.errors %}
-      <div class="mb-4 rounded-lg border border-red-300 bg-red-50 text-red-800 p-3 text-sm">
-        <p class="font-semibold mb-2">Please fix the errors below:</p>
-        <ul class="list-disc ml-5 space-y-1">
-          {% for field in form %}
-            {% for error in field.errors %}
-              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-            {% endfor %}
-          {% endfor %}
-          {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <!-- First name -->
-      <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.first_name.id_for_label }}">First name</label>
-        {% if form.first_name.errors %}
-          {{ form.first_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.first_name.errors.0 }}</p>
-        {% else %}
-          {{ form.first_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">First name</label>
+          {{ form.first_name|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.first_name.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Last name</label>
+          {{ form.last_name|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.last_name.errors }}
+        </div>
       </div>
 
-      <!-- Last name -->
-      <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.last_name.id_for_label }}">Last name</label>
-        {% if form.last_name.errors %}
-          {{ form.last_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.last_name.errors.0 }}</p>
-        {% else %}
-          {{ form.last_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Username</label>
+          {{ form.username|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.username.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Age</label>
+          {{ form.age|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.age.errors }}
+        </div>
       </div>
 
-      <!-- Username -->
       <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.username.id_for_label }}">Username</label>
-        {% if form.username.errors %}
-          {{ form.username|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.username.errors.0 }}</p>
-        {% else %}
-          {{ form.username|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Email</label>
+        {{ form.email|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.email.errors }}
       </div>
 
-      <!-- Age -->
       <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.age.id_for_label }}">Age</label>
-        {% if form.age.errors %}
-          {{ form.age|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.age.errors.0 }}</p>
-        {% else %}
-          {{ form.age|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Phone</label>
+        {{ form.phone|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.phone.errors }}
       </div>
 
-      <!-- Email -->
       <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.email.id_for_label }}">Email</label>
-        {% if form.email.errors %}
-          {{ form.email|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
-        {% else %}
-          {{ form.email|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Date of Birth</label>
+        {{ form.date_of_birth|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+        {{ form.date_of_birth.errors }}
       </div>
 
-      <!-- Phone -->
-      <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.phone.id_for_label }}">Phone</label>
-        {% if form.phone.errors %}
-          {{ form.phone|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.phone.errors.0 }}</p>
-        {% else %}
-          {{ form.phone|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Password</label>
+          {{ form.password1|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.password1.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Confirm Password</label>
+          {{ form.password2|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {{ form.password2.errors }}
+        </div>
       </div>
 
-      <!-- Password -->
       <div>
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.password1.id_for_label }}">Password</label>
-        {% if form.password1.errors %}
-          {{ form.password1|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
-          <p class="mt-1 text-sm text-red-600">{{ form.password1.errors.0 }}</p>
-        {% else %}
-          {{ form.password1|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
-        {% endif %}
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Profile Picture (optional)</label>
+        <div class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700">
+          {{ form.profile_picture }}
+        </div>
+        {{ form.profile_picture.errors }}
       </div>
+    </div>
+
+    <button class="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Create Account</button>
+    <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">Already have an account? <a href="{% url 'login' %}" class="text-blue-600 dark:text-blue-400 hover:underline">Sign in</a></p>
+  </form>
+</div>
+{% endblock %}
 
       <!-- Confirm password -->
       <div>
@@ -228,5 +209,4 @@
       }
     });
   </script>
-{% endblock %}
 {% endblock %}

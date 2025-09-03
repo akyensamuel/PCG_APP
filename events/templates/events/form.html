@@ -1,80 +1,97 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">{% if mode == 'edit' %}Edit Event{% else %}New Event{% endif %}</h1>
-<form method="post" enctype="multipart/form-data" class="space-y-4 max-w-3xl">{% csrf_token %}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="block text-xs mb-1">Title</label>
-      {{ form.title|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    </div>
-    <div>
-      <label class="block text-xs mb-1">Group (optional)</label>
-      {{ form.group|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-      <p class="text-xs text-gray-500">Leaders can only choose groups they lead.</p>
-    </div>
-  </div>
-  <div class="flex items-center gap-2">
-    {{ form.is_global }} <label class="text-sm">Visible to all members (Admins only)</label>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div>
-      <label class="block text-xs mb-1">Start date</label>
-      {{ form.start_date|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    </div>
-    <div>
-      <label class="block text-xs mb-1">End date</label>
-      {{ form.end_date|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    </div>
-    <div>
-      <label class="block text-xs mb-1">Start time</label>
-      {{ form.start_time|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    </div>
-    <div>
-      <label class="block text-xs mb-1">End time</label>
-      {{ form.end_time|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    </div>
-  </div>
-  <div>
-    <label class="block text-xs mb-1">Location</label>
-    {{ form.location|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-  </div>
-  <div>
-    <label class="block text-xs mb-1">Featured image</label>
-    {{ form.featured_image }}
-  </div>
-  <div>
-    <label class="block text-xs mb-1">Body</label>
-    {{ form.body|add_class:"w-full border rounded px-3 py-2 bg-white dark:bg-slate-900" }}
-    <p class="text-xs text-gray-500">Tip: You can paste formatted text; a richer editor can be enabled later.</p>
-  </div>
-  <div>
-    <label class="block text-xs mb-1">Gallery images</label>
-    {{ upload_form.images }}
-  </div>
-  {% if mode == 'edit' and event and event.images.all %}
-    <div>
-      <h3 class="text-sm font-semibold mb-2">Existing images</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {% for img in event.images.all %}
-          <div class="border rounded p-2">
-            <img src="{{ img.image.url }}" alt="{{ img.caption }}" class="w-full rounded" />
-            <div class="flex items-center justify-between mt-2 text-xs">
-              <span class="truncate">{{ img.caption|default:'(no caption)' }}</span>
-              <a href="{% url 'events:delete_image' img.id %}" class="text-red-600 underline">Delete</a>
-            </div>
-          </div>
-        {% endfor %}
+<div class="max-w-xl">
+  <h1 class="text-2xl font-bold mb-4">{% if mode == 'edit' %}Edit Event{% else %}New Event{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Title</label>
+          {{ form.title|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.title.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Group (optional)</label>
+          {{ form.group|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.group.errors }}
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leaders can only choose groups they lead.</p>
+        </div>
       </div>
+      <div class="flex items-center gap-2">
+        {{ form.is_global }} <label class="text-sm text-gray-700 dark:text-gray-300">Visible to all members (Admins only)</label>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Start date</label>
+          {{ form.start_date|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.start_date.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">End date</label>
+          {{ form.end_date|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.end_date.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">Start time</label>
+          {{ form.start_time|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.start_time.errors }}
+        </div>
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">End time</label>
+          {{ form.end_time|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+          {{ form.end_time.errors }}
+        </div>
+      </div>
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Location</label>
+        {{ form.location|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+        {{ form.location.errors }}
+      </div>
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Featured image</label>
+        <div class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700">
+          {{ form.featured_image }}
+        </div>
+        {{ form.featured_image.errors }}
+      </div>
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Body</label>
+        {{ form.body|add_class:"w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]" }}
+        {{ form.body.errors }}
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Tip: You can paste formatted text; a richer editor can be enabled later.</p>
+      </div>
+      <div>
+        <label class="block font-medium text-gray-900 dark:text-white mb-2">Gallery images</label>
+        <div class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700">
+          {{ upload_form.images }}
+        </div>
+        {{ upload_form.images.errors }}
+      </div>
+      {% if mode == 'edit' and event and event.images.all %}
+        <div>
+          <h3 class="text-sm font-semibold mb-2 text-gray-900 dark:text-white">Existing images</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {% for img in event.images.all %}
+              <div class="border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-700">
+                <img src="{{ img.image.url }}" alt="{{ img.caption }}" class="w-full rounded" />
+                <div class="flex items-center justify-between mt-2 text-xs">
+                  <span class="truncate text-gray-700 dark:text-gray-300">{{ img.caption|default:'(no caption)' }}</span>
+                  <a href="{% url 'events:delete_image' img.id %}" class="text-red-600 dark:text-red-400 hover:underline">Delete</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-  <div class="flex items-center gap-2">
-    <button class="px-4 py-2 rounded bg-pcg-blue text-white">Save</button>
+    <button class="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Save</button>
     {% if mode == 'edit' and event %}
-      <a class="underline text-sm" href="{% url 'events:detail' event.slug %}">Cancel</a>
+      <a class="ml-3 text-sm text-blue-600 dark:text-blue-400 hover:underline" href="{% url 'events:detail' event.slug %}">Cancel</a>
     {% else %}
-      <a class="underline text-sm" href="{% url 'events:calendar' %}">Cancel</a>
+      <a class="ml-3 text-sm text-blue-600 dark:text-blue-400 hover:underline" href="{% url 'events:calendar' %}">Cancel</a>
     {% endif %}
-  </div>
-</form>
+  </form>
+</div>
 {% endblock %}

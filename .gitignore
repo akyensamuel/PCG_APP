@@ -12,12 +12,19 @@ __pycache__/
 /media/
 *.db
 
-# Envs
+# Environment Variables - IMPORTANT: Never commit these!
 .env
 .env.*
+*.env
+env/
+ENV/
+
+# Virtual Environments
 virtual/
 venv/
 .venv/
+env/
+ENV/
 
 # Node
 node_modules/
@@ -29,3 +36,20 @@ pnpm-lock.yaml
 .vscode/
 .idea/
 .DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Production secrets
+secrets.json
+config.json

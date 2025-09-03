@@ -1,13 +1,28 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-<div class="max-w-2xl">
+<div class="max-w-xl">
   <div class="mb-4">
-    <a href="{% url 'groups:activities_list' group.id %}" class="text-sm text-blue-600 hover:underline">← Back to Activities</a>
+    <a href="{% url 'groups:activities_list' group.id %}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">← Back to Activities</a>
   </div>
-  <h1 class="text-2xl font-bold mb-3">{% if mode == 'edit' %}Edit{% else %}Record{% endif %} Activity</h1>
-  <form method="post" class="space-y-3">{% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">Save</button>
+  <h1 class="text-2xl font-bold mb-4">{% if mode == 'edit' %}Edit{% else %}Record{% endif %} Activity</h1>
+  <form method="post">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div>
+          <label class="block font-medium text-gray-900 dark:text-white mb-2">{{ field.label }}</label>
+          {% if field.field.widget.input_type == 'textarea' %}
+            {{ field|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]' }}
+          {% else %}
+            {{ field|add_class:'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}
+          {% endif %}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+    </div>
+    <button class="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Save</button>
+    <a href="{% url 'groups:activities_list' group.id %}" class="ml-3 text-sm text-blue-600 dark:text-blue-400 hover:underline">Cancel</a>
   </form>
 </div>
 {% endblock %}

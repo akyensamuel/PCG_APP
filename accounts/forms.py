@@ -6,6 +6,7 @@ from groups.utils import sync_user_role_groups
 from django.urls import reverse
 from notifications.models import Notification
 from groups.models import GroupMembership, GroupApplication
+from .models import Profile
 
 
 class SignupForm(UserCreationForm):
@@ -40,11 +41,13 @@ class SignupForm(UserCreationForm):
         user.email = self.cleaned_data.get('email', '')
         if commit:
             user.save()
+
         # Ensure profile exists
         profile = getattr(user, 'profile', None)
         if profile is None:
             from .models import Profile
             profile, _ = Profile.objects.get_or_create(user=user)
+
         # Assign profile fields
         profile.age = self.cleaned_data.get('age')
         profile.date_of_birth = self.cleaned_data.get('date_of_birth')
@@ -77,14 +80,17 @@ class SignupForm(UserCreationForm):
                             text=f"{user.get_username()} applied to join {g.name}",
                             url=reverse('groups:group_applications', kwargs={'group_pk': g.pk}),
                         )
+
         # Always add default base membership to Members
         members_group, _ = Group.objects.get_or_create(name="Members")
         GroupMembership.objects.get_or_create(user=user, group=members_group)
+
         # Sync Django auth groups to reflect domain memberships/roles
         try:
             sync_user_role_groups(user)
         except Exception:
             pass
+
         return user
 
     def __init__(self, *args, **kwargs):
@@ -98,11 +104,53 @@ class SignupForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('An account with this email already exists.')
+            raise forms.ValidationError("A user with this email already exists.")
         return email
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username', '')
-        if username and User.objects.filter(username__iexact=username).exists():
-            raise forms.ValidationError('This username is already taken.')
-        return username
+
+class ProfileEditForm(forms.ModelForm):
+    """Form for editing user profile information"""
+    first_name = forms.CharField(max_length=150, required=True)
+    last_name = forms.CharField(max_length=150, required=True)
+    email = forms.EmailField(required=True)
+    
+    class Meta:
+        model = Profile
+        fields = ['phone', 'age', 'date_of_birth', 'avatar']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        if self.user:
+            # Pre-populate user fields
+            self.fields['first_name'].initial = self.user.first_name
+            self.fields['last_name'].initial = self.user.last_name
+            self.fields['email'].initial = self.user.email
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and self.user:
+            # Check if email exists for other users
+            if User.objects.filter(email__iexact=email).exclude(pk=self.user.pk).exists():
+                raise forms.ValidationError("A user with this email already exists.")
+        return email
+    
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        
+        if self.user and commit:
+            # Update user fields
+            self.user.first_name = self.cleaned_data.get('first_name', '')
+            self.user.last_name = self.cleaned_data.get('last_name', '')
+            self.user.email = self.cleaned_data.get('email', '')
+            self.user.save()
+            
+            # Update profile
+            profile.user = self.user
+            profile.save()
+        
+        return profile
