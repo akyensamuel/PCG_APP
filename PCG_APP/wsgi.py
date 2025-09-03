@@ -16,4 +16,3 @@ application = get_wsgi_application()
 
 # Vercel serverless function entry point
 app = application
-handler = application
