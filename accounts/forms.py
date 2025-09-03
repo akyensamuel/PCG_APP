@@ -125,6 +125,12 @@ class ProfileEditForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
+        # Remove avatar field in production to avoid file upload issues
+        from django.conf import settings
+        if not settings.DEBUG:
+            if 'avatar' in self.fields:
+                del self.fields['avatar']
+        
         if self.user:
             # Pre-populate user fields
             self.fields['first_name'].initial = self.user.first_name
