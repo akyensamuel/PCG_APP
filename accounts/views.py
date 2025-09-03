@@ -59,9 +59,12 @@ def profile_edit_view(request):
 	if request.method == 'POST':
 		form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=request.user)
 		if form.is_valid():
-			form.save()
-			messages.success(request, 'Your profile has been updated successfully!')
-			return redirect('profile_edit')
+			try:
+				form.save()
+				messages.success(request, 'Your profile has been updated successfully!')
+				return redirect('profile_edit')
+			except Exception as e:
+				messages.error(request, f'Error saving profile: {str(e)}')
 		else:
 			messages.error(request, 'Please correct the errors below.')
 	else:
