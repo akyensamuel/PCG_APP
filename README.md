@@ -31,6 +31,22 @@ This project uses environment variables for configuration management:
 - See `ENVIRONMENT_SETUP.md` for detailed configuration instructions
 - Example configuration available in `.env.example`
 
+## Deployment
+
+### Vercel Deployment
+This project is configured for easy deployment to Vercel:
+- See `VERCEL_DEPLOYMENT.md` for complete deployment guide
+- Uses `vercel.json` for serverless configuration
+- Supports PostgreSQL database (Supabase)
+- Automatic Tailwind CSS builds
+- Production-ready security settings
+
+### Quick Deploy to Vercel
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Add environment variables (see deployment guide)
+4. Deploy automatically
+
 ## Development Notes
 - Templates in app directories under `templates/`
 - Static files at `static/` (compiled CSS outputs to `css/styles.css`)
