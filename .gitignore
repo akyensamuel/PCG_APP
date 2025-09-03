@@ -8,9 +8,7 @@ __pycache__/
 *.log
 
 # Django
-/staticfiles/
-/media/
-*.db
+
 
 # Environment Variables - IMPORTANT: Never commit these!
 .env
