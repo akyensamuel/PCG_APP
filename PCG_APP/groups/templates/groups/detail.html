@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-3xl">
+  <h1 class="text-2xl font-bold mb-2">{{ group.name }}</h1>
+  {% if is_admin %}
+    <div class="mb-4 flex gap-3">
+      <a href="{% url 'groups:change_group_leader' group.id %}" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm">Change leader</a>
+      <a href="{% url 'groups:delete_group' group.id %}" class="px-3 py-1.5 rounded bg-red-600 text-white text-sm">Delete group</a>
+      <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
+    </div>
+  {% endif %}
+  {% if is_leader and not is_admin %}
+    <div class="mb-4">
+      <a href="{% url 'groups:group_applications' group.id %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white text-sm">Applications</a>
+    </div>
+  {% endif %}
+  {% if group.description %}
+    <p class="text-gray-600 dark:text-gray-300 mb-4">{{ group.description }}</p>
+  {% endif %}
+
+  {% if is_admin %}
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold mb-2">Leaders</h2>
+      <ul class="list-disc ml-5 space-y-1">
+        {% for m in leaders %}
+          <li>{{ m.user.get_full_name|default:m.user.username }}</li>
+        {% empty %}
+          <li>No leader assigned.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div>
+    <h2 class="text-lg font-semibold mb-2">Members</h2>
+    <ul class="list-disc ml-5 space-y-1">
+      {% for m in members %}
+        <li>
+          {% if is_admin or is_leader %}
+            <a class="hover:underline" href="{% url 'groups:member_detail' group.id m.user.id %}">{{ m.user.get_full_name|default:m.user.username }}</a>
+          {% else %}
+            {{ m.user.get_full_name|default:m.user.username }}
+          {% endif %}
+          {% if is_admin and m.is_leader %}<span class="ml-2 text-xs px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">Leader</span>{% endif %}
+        </li>
+      {% empty %}
+        <li>No members in this group yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

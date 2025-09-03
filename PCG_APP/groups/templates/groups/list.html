@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Groups</h1>
+<ul class="space-y-3">
+  {% for g in groups %}
+    <li class="p-3 border rounded">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <a class="hover:underline font-medium" href="{% if g.id in member_group_ids %}{% url 'groups:detail' g.id %}{% else %}#{% endif %}">{{ g.name }}</a>
+          {% if is_admin %}
+            <div class="text-xs text-gray-600 dark:text-gray-300 mt-1">
+              Leaders:
+              {% with leaders=g.leader_memberships %}
+                {% if leaders and leaders|length > 0 %}
+                  {% for lm in leaders %}
+                    <span class="mr-2">{{ lm.user.get_full_name|default:lm.user.username }}</span>
+                  {% endfor %}
+                {% else %}
+                  <span>None</span>
+                {% endif %}
+              {% endwith %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="text-right space-x-2">
+          {% if is_admin %}
+            <a href="{% url 'groups:change_group_leader' g.id %}" class="text-blue-600 hover:underline text-xs">Change leader</a>
+            <a href="{% url 'groups:delete_group' g.id %}" class="text-red-600 hover:underline text-xs">Delete</a>
+          {% endif %}
+          {% if request.user.is_authenticated %}
+            {% if g.id in member_group_ids %}
+              <a href="{% url 'groups:detail' g.id %}" class="text-green-700 hover:underline text-xs">View</a>
+            {% else %}
+              {% if g.name != 'Members' and g.name != 'Leaders' and g.name != 'Admin' %}
+                {% if g.id in pending_app_ids %}
+                  <span class="text-xs text-gray-500">Applied</span>
+                {% else %}
+                  <a href="{% url 'groups:apply_to_group' g.id %}" class="text-indigo-700 hover:underline text-xs">Apply</a>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            <span class="text-xs text-gray-500">Sign in to apply</span>
+          {% endif %}
+          {% if is_admin or g.id in leader_group_ids %}
+            <a href="{% url 'groups:group_applications' g.id %}" class="text-xs text-blue-700 hover:underline">Applications</a>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+  {% empty %}
+    <li>No groups yet.</li>
+  {% endfor %}
+  {% if is_admin %}
+    <div class="mt-4 text-sm text-gray-500">Admin: <a class="underline" href="{% url 'groups:create_church_group' %}">Create group</a></div>
+  {% endif %}
+</ul>
+{% endblock %}

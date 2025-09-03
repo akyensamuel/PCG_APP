@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom components */
+@layer components {
+  .btn-primary {
+  @apply inline-flex items-center justify-center rounded-md bg-pcg-blue px-4 py-2 text-white font-medium shadow hover:bg-pcg-blue-600 transition dark:bg-white/90 dark:text-slate-900 dark:hover:bg-white;
+  }
+  .btn-secondary {
+  @apply inline-flex items-center justify-center rounded-md border border-pcg-blue px-4 py-2 text-pcg-blue font-medium hover:bg-pcg-blue/10 transition dark:border-white/30 dark:text-white dark:hover:bg-white/10;
+  }
+  .card {
+  @apply rounded-lg border bg-white p-5 shadow-sm dark:bg-slate-900/60 dark:border-slate-700/60;
+  }
+  .card-title {
+  @apply text-lg font-semibold text-pcg-blue dark:text-white;
+  }
+  .card-body {
+  @apply mt-2 text-slate-700 text-sm dark:text-slate-300;
+  }
+  .input {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-pcg-blue placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-pcg-blue/40 focus:border-pcg-blue dark:bg-slate-900 dark:border-slate-700 dark:text-white dark:placeholder-slate-500;
+  }
+  .label {
+    @apply block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400;
+  }
+  .section-title {
+    @apply text-2xl font-bold tracking-tight;
+  }
+  .muted {
+    @apply text-sm text-slate-600 dark:text-slate-400;
+  }
+  .list-link {
+    @apply underline hover:no-underline;
+  }
+}

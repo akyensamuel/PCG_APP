@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl">
+  <div class="mb-4">
+    <a href="{% url 'groups:detail' group.id %}" class="text-sm text-blue-600 hover:underline">← Back to {{ group.name }}</a>
+  </div>
+  <h1 class="text-2xl font-bold mb-2">Member</h1>
+  <div class="mb-4 p-4 border rounded">
+    <div class="mb-1"><span class="font-medium">Username:</span> {{ info.username }}</div>
+    {% if info.full_name %}
+      <div class="mb-1"><span class="font-medium">Name:</span> {{ info.full_name }}</div>
+    {% endif %}
+    <div class="mb-1"><span class="font-medium">Email:</span> {{ info.email }}</div>
+    <div class="mb-1"><span class="font-medium">Joined:</span> {{ info.date_joined }}</div>
+    <div class="mb-1"><span class="font-medium">Role in this group:</span> {% if info.is_current_leader %}Leader{% else %}Member{% endif %}</div>
+  </div>
+
+  {% if is_admin or is_leader %}
+    <form method="post" onsubmit="return confirm('Remove this member from the group?');">
+      {% csrf_token %}
+      {% if membership.is_leader and not is_admin %}
+        <p class="text-sm text-gray-600 dark:text-gray-300">You cannot remove a group leader. Ask an Admin.</p>
+      {% else %}
+        <button type="submit" class="px-3 py-1.5 rounded bg-red-600 text-white text-sm">Remove from group</button>
+      {% endif %}
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

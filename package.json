@@ -1,0 +1,14 @@
+{
+  "name": "pcg-app",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "tailwind:build": "tailwindcss -c tailwind.config.js -i ./PCG_APP/static/css/tailwind.css -o ./PCG_APP/static/css/styles.css --minify",
+    "tailwind:watch": "tailwindcss -c tailwind.config.js -i ./PCG_APP/static/css/tailwind.css -o ./PCG_APP/static/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10",
+    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.19"
+  }
+}

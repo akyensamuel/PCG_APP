@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">My Groups</h1>
+<ul class="space-y-2">
+  {% for item in items %}
+    <li class="p-3 border rounded flex items-center justify-between">
+      <a href="{% url 'groups:detail' item.group.id %}" class="font-medium hover:underline">{{ item.group.name }}</a>
+      {% if item.is_leader %}
+        <span class="text-xs px-2 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">Leader</span>
+      {% else %}
+        <span class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 border border-gray-300">Member</span>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>You are not in any groups yet.</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

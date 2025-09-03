@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Sign up • PCG - A.N.T{% endblock %}
+{% block content %}
+<div class="max-w-3xl">
+  <h1 class="text-2xl font-bold mb-4">Create an account</h1>
+  <form method="post" enctype="multipart/form-data" class="" novalidate>{% csrf_token %}
+    {% if form.errors %}
+      <div class="mb-4 rounded-lg border border-red-300 bg-red-50 text-red-800 p-3 text-sm">
+        <p class="font-semibold mb-2">Please fix the errors below:</p>
+        <ul class="list-disc ml-5 space-y-1">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <!-- First name -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.first_name.id_for_label }}">First name</label>
+        {% if form.first_name.errors %}
+          {{ form.first_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.first_name.errors.0 }}</p>
+        {% else %}
+          {{ form.first_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Last name -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.last_name.id_for_label }}">Last name</label>
+        {% if form.last_name.errors %}
+          {{ form.last_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.last_name.errors.0 }}</p>
+        {% else %}
+          {{ form.last_name|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Username -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.username.id_for_label }}">Username</label>
+        {% if form.username.errors %}
+          {{ form.username|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.username.errors.0 }}</p>
+        {% else %}
+          {{ form.username|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Age -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.age.id_for_label }}">Age</label>
+        {% if form.age.errors %}
+          {{ form.age|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.age.errors.0 }}</p>
+        {% else %}
+          {{ form.age|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Email -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.email.id_for_label }}">Email</label>
+        {% if form.email.errors %}
+          {{ form.email|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+        {% else %}
+          {{ form.email|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Phone -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.phone.id_for_label }}">Phone</label>
+        {% if form.phone.errors %}
+          {{ form.phone|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.phone.errors.0 }}</p>
+        {% else %}
+          {{ form.phone|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.password1.id_for_label }}">Password</label>
+        {% if form.password1.errors %}
+          {{ form.password1|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.password1.errors.0 }}</p>
+        {% else %}
+          {{ form.password1|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Confirm password -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.password2.id_for_label }}">Confirm password</label>
+        {% if form.password2.errors %}
+          {{ form.password2|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.password2.errors.0 }}</p>
+        {% else %}
+          {{ form.password2|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Date of birth -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.date_of_birth.id_for_label }}">Date of birth</label>
+        {% if form.date_of_birth.errors %}
+          {{ form.date_of_birth|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.date_of_birth.errors.0 }}</p>
+        {% else %}
+          {{ form.date_of_birth|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required' }}
+        {% endif %}
+      </div>
+
+      <!-- Avatar (optional) -->
+      <div>
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.avatar.id_for_label }}">Profile Image (optional)</label>
+        {% if form.avatar.errors %}
+          {{ form.avatar|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'aria-invalid:true' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.avatar.errors.0 }}</p>
+        {% else %}
+          {{ form.avatar|add_class:'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' }}
+        {% endif %}
+      </div>
+
+    <!-- Groups (Select2-ready) -->
+      <div class="md:col-span-2">
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.groups.id_for_label }}">Groups you'd like to join (applications)</label>
+        {% if form.groups.errors %}
+      {{ form.groups|add_class:'js-groups-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-red-500 focus:border-red-500 border-red-500'|attr:'required:required'|attr:'aria-invalid:true'|attr:'data-placeholder:Select groups'|attr:'data-url:/groups/api/groups/' }}
+          <p class="mt-1 text-sm text-red-600">{{ form.groups.errors.0 }}</p>
+        {% else %}
+      {{ form.groups|add_class:'js-groups-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'|attr:'required:required'|attr:'data-placeholder:Select groups'|attr:'data-url:/groups/api/groups/' }}
+        {% endif %}
+  <p class="text-xs text-gray-500 mt-1">We’ll send applications to the selected groups. Leaders/Admins can approve them. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+      </div>
+    </div>
+  <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign up</button>
+  </form>
+</div>
+{% block scripts %}
+  {{ block.super }}
+  <!-- Select2 assets (optional CDN; replace with local/static if you prefer) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    /* Dark-mode friendly inputs */
+    html.dark input[type="text"],
+    html.dark input[type="password"],
+    html.dark input[type="email"],
+    html.dark input[type="number"],
+    html.dark input[type="date"],
+    html.dark select,
+    html.dark textarea {
+      background-color: rgb(51 65 85); /* slate-700 */
+      color: #fff;
+    }
+    html.dark input::placeholder,
+    html.dark textarea::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+    /* Select2 theming to match dark */
+    html.dark .select2-container--default .select2-selection--multiple,
+    html.dark .select2-container--default .select2-selection--single {
+      background-color: rgb(51 65 85);
+      border-color: rgb(71 85 105);
+      color: #fff;
+    }
+    html.dark .select2-dropdown { background-color: rgb(30 41 59); color: #fff; }
+    html.dark .select2-results__option { color: #fff; }
+    html.dark .select2-search__field { background-color: rgb(51 65 85); color: #fff; }
+    html.dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: rgb(15 23 42); border-color: rgb(71 85 105); color: #fff;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const $ = window.jQuery || window.$;
+      const selects = document.querySelectorAll('.js-groups-select');
+      if (selects.length && $ && $.fn && $.fn.select2) {
+        selects.forEach(function(el){
+          const placeholder = el.getAttribute('data-placeholder') || 'Select groups';
+          const url = el.getAttribute('data-url') || '/groups/api/groups/';
+          $(el).select2({
+            placeholder: placeholder,
+            width: '100%',
+            ajax: {
+              url: url,
+              dataType: 'json',
+              delay: 250,
+              data: function(params) {
+                return { q: params.term || '', page: params.page || 1 };
+              },
+              processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                  results: data.results,
+                  pagination: { more: data.pagination && data.pagination.more }
+                };
+              },
+              cache: true
+            },
+            minimumInputLength: 0,
+            templateResult: function (data, container) {
+              if (data.loading) return data.text;
+              const selected = $(el).val() || [];
+              const isChecked = selected.includes(String(data.id));
+              const $markup = $(
+                `<div class="flex items-center gap-2">
+                   <input type="checkbox" ${isChecked ? 'checked' : ''} />
+                   <span>${data.text}</span>
+                 </div>`
+              );
+              return $markup;
+            }
+          });
+        });
+      }
+    });
+  </script>
+{% endblock %}
+{% endblock %}

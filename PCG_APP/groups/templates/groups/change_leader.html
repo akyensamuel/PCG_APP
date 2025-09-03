@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-xl">
+  <h1 class="text-2xl font-bold mb-4">Change Leader: {{ group.name }}</h1>
+  <form method="post">{% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      <div>
+        <label class="block font-medium">New Leader</label>
+        {{ form.leader }}
+        {{ form.leader.errors }}
+      </div>
+    </div>
+    <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+    <a href="{% url 'groups:detail' group.id %}" class="ml-3 text-sm underline">Cancel</a>
+  </form>
+</div>
+{% endblock %}
